@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from os import getenv
 from flask import Flask, redirect
 
@@ -7,7 +8,8 @@ messages = []
 
 def add_messages(username, message):
     """This takes username and message and adds to list"""
-    messages.append("{}: {}".format(username, message))
+    now = datetime.now().strftime("%H:%M:%S")
+    messages.append("({}): {}: {}".format(now, username, message))
 
 
 def get_all_messages():
