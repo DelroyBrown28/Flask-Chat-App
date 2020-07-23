@@ -1,6 +1,6 @@
 import os
 from os import getenv
-from flask import Flask
+from flask import Flask, redirect
 
 app = Flask(__name__)
 messages = []
@@ -8,6 +8,11 @@ messages = []
 def add_messages(username, message):
     """This takes username and message and adds to list"""
     messages.append("{}: {}".format(username, message))
+
+
+def get_all_messages():
+    """Gets all messages and seperates using a 'br'"""
+    return "<br>".join(messages)
 
 
 @app.route('/')
@@ -19,13 +24,14 @@ def index():
 @app.route('/<username>')
 def user(username):
     """Display chat message"""
-    return "Welcome, {0}".format(username, messages)
+    return "<h1>Welcome, {0}</h1>{1}".format(username, get_all_messages())
 
 
-@app.route('/<username>/<message>')
+@app.route("/<username>/<message>")
 def send_message(username, message):
     """Create new message and redirect back to chat page"""
-    return "{0}: {1}".format(username, message)
+    add_messages(username, message)
+    return redirect("/" + username)
 
 
 app.run(host=os.getenv('IP'), port=int(os.getenv('PORT', 5000)), debug=True)
